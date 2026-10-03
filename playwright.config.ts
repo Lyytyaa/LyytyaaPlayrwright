@@ -1,10 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './',
-  reporter: 'html',
+  testDir: './test', // Mengarah ke folder test kamu
+  timeout: 60000,
   use: {
-    trace: 'on-first-retry',
+    headless: false, // Set true kalau mau running tanpa buka browser
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
     {
