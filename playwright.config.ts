@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// 🔑 SUSAH-SUSAH DAHULU, LOAD .ENV DENGAN BENAR DAHULU!
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
   testDir: './test', // Mengarah ke folder test kamu
