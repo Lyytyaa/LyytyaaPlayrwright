@@ -1,30 +1,40 @@
 import { test, expect } from '@playwright/test';
-import { runlogin } from '../Fixtures/login-demo';
-import dotenv from 'dotenv';
-import path from 'path';
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { testData } from '../data/testData';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+test.describe('Authentication Tests', () => {
+  let loginPage: LoginPage;
+  let inventoryPage: InventoryPage;
 
-const emailpositive: string = process.env.user_emailpositive!;
-const emailnegative: string = process.env.user_emailnegative!;
-const passpositive: string = process.env.user_passwordpositive!;
-const passnegative: string = process.env.user_passwordnegative!;
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    inventoryPage = new InventoryPage(page);
+    await loginPage.goto();
+  });
 
-test.describe('Test Case Login',() => {
-    test.beforeEach(async({page})=>{
-        await page.goto('https://www.saucedemo.com/'); 
-        await page.waitForLoadState('domcontentloaded');
-    });
-    test('TC-001 : Login Positive',async({page})=>{
-        await runlogin(page,emailpositive,passpositive);
-        await expect(page.getByText('Swag Labs').first()).toBeVisible();
-    });
-     test('TC-002 : Login Negative Password',async({page})=>{
-        await runlogin(page,emailpositive,passnegative);
-        await expect(page.getByText('Epic sadface: Username and password do not match any user in this service').first()).toBeVisible();
-    });
-     test('TC-003 : Login Negative User',async({page})=>{
-        await runlogin(page,emailnegative,passpositive);
-        await expect(page.getByText('Epic sadface: Username and password do not match any user in this service').first()).toBeVisible();
-    });
+  test('TC-001 : Login Positive - Standard User', async () => {
+    const { username, password } = testData.users.standard;
+    await loginPage.login(username, password);
+
+    await expect(inventoryPage.title).toBeVisible();
+    await expect(inventoryPage.title).toHaveText('Products');
+  });
+
+  test('TC-002 : Login Negative - Invalid Password', async () => {
+    const { username } = testData.users.standard;
+    const { password } = testData.users.invalid;
+    await loginPage.login(username, password);
+
+    await expect(loginPage.errorMessage).toBeVisible();
+    await expect(loginPage.errorMessage).toContainText(testData.errorMessages.invalidCredentials);
+  });
+
+  test('TC-003 : Login Negative - Invalid Username', async () => {
+    const { username, password } = testData.users.invalid;
+    await loginPage.login(username, password);
+
+    await expect(loginPage.errorMessage).toBeVisible();
+    await expect(loginPage.errorMessage).toContainText(testData.errorMessages.invalidCredentials);
+  });
 });

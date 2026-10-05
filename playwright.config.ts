@@ -2,16 +2,23 @@ import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
-// 🔑 SUSAH-SUSAH DAHULU, LOAD .ENV DENGAN BENAR DAHULU!
+// Load environment variables dari .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
-  testDir: './test', // Mengarah ke folder test kamu
+  testDir: './tests',
   timeout: 60000,
+  expect: {
+    timeout: 5000,
+  },
+  fullyParallel: true,
+  reporter: 'html',
   use: {
-    headless: false, // Set true kalau mau running tanpa buka browser
+    baseURL: process.env.BASE_URL || 'https://www.saucedemo.com',
+    headless: false, // Ubah ke true jika ingin mode background/CI
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    trace: 'on-first-retry',
   },
   projects: [
     {
