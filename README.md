@@ -14,10 +14,13 @@ abdulPlaywrightTest/
 │   ├── LoginPage.ts
 │   ├── InventoryPage.ts
 │   ├── CartPage.ts
-│   └── CheckoutPage.ts
+│   ├── CheckoutPage.ts
+│   └── SidebarMenu.ts
 ├── tests/                   # File spesifikasi pengujian (test suites)
 │   ├── login.spec.ts
-│   └── addtocart.spec.ts
+│   ├── addtocart.spec.ts
+│   ├── sort.spec.ts
+│   └── navigation.spec.ts
 ├── backup/                  # Arsip file eksperimen / lama
 │   ├── example.spec.ts
 │   ├── intijaya.spec.ts
