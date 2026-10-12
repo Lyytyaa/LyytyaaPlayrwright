@@ -37,4 +37,21 @@ test.describe('Authentication Tests', () => {
     await expect(loginPage.errorMessage).toBeVisible();
     await expect(loginPage.errorMessage).toContainText(testData.errorMessages.invalidCredentials);
   });
+
+  test('TC-004 : Login Negative - Empty Username & Password', async () => {
+    // Klik login tanpa mengisi username dan password
+    await loginPage.loginButton.click();
+
+    await expect(loginPage.errorMessage).toBeVisible();
+    await expect(loginPage.errorMessage).toContainText(testData.errorMessages.emptyCredentials);
+  });
+
+  test('TC-005 : Login Negative - Locked Out User', async () => {
+    const { username, password } = testData.users.lockedOut;
+    await loginPage.login(username, password);
+
+    // Bukti: user yang di-lock mendapat pesan error khusus
+    await expect(loginPage.errorMessage).toBeVisible();
+    await expect(loginPage.errorMessage).toContainText(testData.errorMessages.lockedOutUser);
+  });
 });

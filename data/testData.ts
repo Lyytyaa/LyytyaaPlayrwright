@@ -4,6 +4,10 @@ export const testData = {
       username: 'standard_user',
       password: 'secret_sauce',
     },
+    lockedOut: {
+      username: 'locked_out_user',
+      password: 'secret_sauce',
+    },
     invalid: {
       username: 'asal_user',
       password: 'asal_password',
@@ -16,10 +20,16 @@ export const testData = {
   },
   products: {
     backpack: 'Sauce Labs Backpack',
+    bikeLight: 'Sauce Labs Bike Light',
+    boltTShirt: 'Sauce Labs Bolt T-Shirt',
   },
   errorMessages: {
     invalidCredentials: 'Epic sadface: Username and password do not match any user in this service',
+    lockedOutUser: 'Epic sadface: Sorry, this user has been locked out.',
+    emptyCredentials: 'Epic sadface: Username is required',
     firstNameRequired: 'Error: First Name is required',
+    lastNameRequired: 'Error: Last Name is required',
+    postalCodeRequired: 'Error: Postal Code is required',
   },
   successMessages: {
     orderComplete: 'Thank you for your order!',
