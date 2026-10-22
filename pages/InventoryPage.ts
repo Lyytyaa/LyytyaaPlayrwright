@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { inventoryLocators } from '../locators/inventoryLocators';
 
 export class InventoryPage {
   readonly page: Page;
@@ -11,32 +12,32 @@ export class InventoryPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.title = page.locator('[data-test="title"]');
-    this.cartLink = page.locator('[data-test="shopping-cart-link"]');
-    this.cartBadge = page.locator('[data-test="shopping-cart-badge"]');
-    this.sortDropdown = page.locator('[data-test="product-sort-container"]');
-    this.itemNames = page.locator('[data-test="inventory-item-name"]');
-    this.itemPrices = page.locator('[data-test="inventory-item-price"]');
+    this.title = page.locator(inventoryLocators.title);
+    this.cartLink = page.locator(inventoryLocators.cartLink);
+    this.cartBadge = page.locator(inventoryLocators.cartBadge);
+    this.sortDropdown = page.locator(inventoryLocators.sortDropdown);
+    this.itemNames = page.locator(inventoryLocators.itemName);
+    this.itemPrices = page.locator(inventoryLocators.itemPrice);
   }
 
   getProductContainer(productName: string): Locator {
     return this.page
-      .locator('[data-test="inventory-item"]')
+      .locator(inventoryLocators.inventoryItem)
       .filter({ hasText: productName });
   }
 
   async addItemToCart(productName: string) {
     const product = this.getProductContainer(productName);
-    await product.getByRole('button', { name: 'Add to cart' }).click();
+    await product.getByRole('button', { name: inventoryLocators.addToCartButton }).click();
   }
 
   async removeItemFromCart(productName: string) {
     const product = this.getProductContainer(productName);
-    await product.getByRole('button', { name: /remove/i }).click();
+    await product.getByRole('button', { name: inventoryLocators.removeButton }).click();
   }
 
   async clickProductName(productName: string) {
-    await this.page.locator('[data-test="inventory-item-name"]', { hasText: productName }).click();
+    await this.page.locator(inventoryLocators.itemName, { hasText: productName }).click();
   }
 
   async goToCart() {

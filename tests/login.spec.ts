@@ -1,19 +1,13 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
+import { expect } from '@playwright/test';
+import { test } from '../fixtures/baseTest';
 import { testData } from '../data/testData';
 
 test.describe('Authentication Tests', () => {
-  let loginPage: LoginPage;
-  let inventoryPage: InventoryPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
+  test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
   });
 
-  test('TC-001 : Login Positive - Standard User', async () => {
+  test('TC-001 : Login Positive - Standard User', async ({ loginPage, inventoryPage }) => {
     const { username, password } = testData.users.standard;
     await loginPage.login(username, password);
 
@@ -21,7 +15,7 @@ test.describe('Authentication Tests', () => {
     await expect(inventoryPage.title).toHaveText('Products');
   });
 
-  test('TC-002 : Login Negative - Invalid Password', async () => {
+  test('TC-002 : Login Negative - Invalid Password', async ({ loginPage }) => {
     const { username } = testData.users.standard;
     const { password } = testData.users.invalid;
     await loginPage.login(username, password);
@@ -30,7 +24,7 @@ test.describe('Authentication Tests', () => {
     await expect(loginPage.errorMessage).toContainText(testData.errorMessages.invalidCredentials);
   });
 
-  test('TC-003 : Login Negative - Invalid Username', async () => {
+  test('TC-003 : Login Negative - Invalid Username', async ({ loginPage }) => {
     const { username, password } = testData.users.invalid;
     await loginPage.login(username, password);
 
@@ -38,7 +32,7 @@ test.describe('Authentication Tests', () => {
     await expect(loginPage.errorMessage).toContainText(testData.errorMessages.invalidCredentials);
   });
 
-  test('TC-004 : Login Negative - Empty Username & Password', async () => {
+  test('TC-004 : Login Negative - Empty Username & Password', async ({ loginPage }) => {
     // Klik login tanpa mengisi username dan password
     await loginPage.loginButton.click();
 
@@ -46,7 +40,7 @@ test.describe('Authentication Tests', () => {
     await expect(loginPage.errorMessage).toContainText(testData.errorMessages.emptyCredentials);
   });
 
-  test('TC-005 : Login Negative - Locked Out User', async () => {
+  test('TC-005 : Login Negative - Locked Out User', async ({ loginPage }) => {
     const { username, password } = testData.users.lockedOut;
     await loginPage.login(username, password);
 

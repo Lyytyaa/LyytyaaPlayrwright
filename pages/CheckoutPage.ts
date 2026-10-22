@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { checkoutLocators } from '../locators/checkoutLocators';
 
 export class CheckoutPage {
   readonly page: Page;
@@ -12,13 +13,13 @@ export class CheckoutPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.firstNameInput = page.locator('[data-test="firstName"]');
-    this.lastNameInput = page.locator('[data-test="lastName"]');
-    this.postalCodeInput = page.locator('[data-test="postalCode"]');
-    this.continueButton = page.locator('[data-test="continue"]');
-    this.finishButton = page.locator('[data-test="finish"]');
-    this.completeHeader = page.locator('[data-test="complete-header"]');
-    this.errorMessage = page.locator('[data-test="error"]');
+    this.firstNameInput = page.locator(checkoutLocators.firstNameInput);
+    this.lastNameInput = page.locator(checkoutLocators.lastNameInput);
+    this.postalCodeInput = page.locator(checkoutLocators.postalCodeInput);
+    this.continueButton = page.locator(checkoutLocators.continueButton);
+    this.finishButton = page.locator(checkoutLocators.finishButton);
+    this.completeHeader = page.locator(checkoutLocators.completeHeader);
+    this.errorMessage = page.locator(checkoutLocators.errorMessage);
   }
 
   async fillInformation(firstName?: string, lastName?: string, postalCode?: string) {

@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { productDetailLocators } from '../locators/productDetailLocators';
 
 export class ProductDetailPage {
   readonly page: Page;
@@ -12,13 +13,13 @@ export class ProductDetailPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.productName = page.locator('[data-test="inventory-item-name"]');
-    this.productDescription = page.locator('[data-test="inventory-item-desc"]');
-    this.productPrice = page.locator('[data-test="inventory-item-price"]');
-    this.addToCartButton = page.locator('[data-test^="add-to-cart"]');
-    this.removeButton = page.locator('[data-test^="remove"]');
-    this.backButton = page.locator('[data-test="back-to-products"]');
-    this.cartBadge = page.locator('[data-test="shopping-cart-badge"]');
+    this.productName = page.locator(productDetailLocators.productName);
+    this.productDescription = page.locator(productDetailLocators.productDescription);
+    this.productPrice = page.locator(productDetailLocators.productPrice);
+    this.addToCartButton = page.locator(productDetailLocators.addToCartButton);
+    this.removeButton = page.locator(productDetailLocators.removeButton);
+    this.backButton = page.locator(productDetailLocators.backButton);
+    this.cartBadge = page.locator(productDetailLocators.cartBadge);
   }
 
   async addToCart() {

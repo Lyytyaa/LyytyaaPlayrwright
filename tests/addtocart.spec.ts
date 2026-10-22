@@ -1,28 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { CartPage } from '../pages/CartPage';
-import { CheckoutPage } from '../pages/CheckoutPage';
+import { expect } from '@playwright/test';
+import { authenticatedTest as test } from '../fixtures/baseTest';
 import { testData } from '../data/testData';
 
 test.describe('Add to Cart & Checkout Flow', () => {
-  let loginPage: LoginPage;
-  let inventoryPage: InventoryPage;
-  let cartPage: CartPage;
-  let checkoutPage: CheckoutPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
-    cartPage = new CartPage(page);
-    checkoutPage = new CheckoutPage(page);
-
-    await loginPage.goto();
-    const { username, password } = testData.users.standard;
-    await loginPage.login(username, password);
-  });
-
-  test('TC-001 : Add to Cart & Complete Checkout Positive', async () => {
+  test('TC-001 : Add to Cart & Complete Checkout Positive', async ({ inventoryPage, cartPage, checkoutPage }) => {
     const productName = testData.products.backpack;
     const { firstName, lastName, postalCode } = testData.checkout;
 
@@ -45,7 +26,7 @@ test.describe('Add to Cart & Checkout Flow', () => {
     await expect(checkoutPage.completeHeader).toHaveText(testData.successMessages.orderComplete);
   });
 
-  test('TC-002 : Checkout Negative - Blank Information Form', async () => {
+  test('TC-002 : Checkout Negative - Blank Information Form', async ({ inventoryPage, cartPage, checkoutPage }) => {
     const productName = testData.products.backpack;
 
     await inventoryPage.addItemToCart(productName);
@@ -59,7 +40,7 @@ test.describe('Add to Cart & Checkout Flow', () => {
     await expect(checkoutPage.errorMessage).toContainText(testData.errorMessages.firstNameRequired);
   });
 
-  test('TC-003 : Checkout Negative - Last Name Kosong', async () => {
+  test('TC-003 : Checkout Negative - Last Name Kosong', async ({ inventoryPage, cartPage, checkoutPage }) => {
     const productName = testData.products.backpack;
     const { firstName, postalCode } = testData.checkout;
 
@@ -75,7 +56,7 @@ test.describe('Add to Cart & Checkout Flow', () => {
     await expect(checkoutPage.errorMessage).toContainText(testData.errorMessages.lastNameRequired);
   });
 
-  test('TC-004 : Checkout Negative - Postal Code Kosong', async () => {
+  test('TC-004 : Checkout Negative - Postal Code Kosong', async ({ inventoryPage, cartPage, checkoutPage }) => {
     const productName = testData.products.backpack;
     const { firstName, lastName } = testData.checkout;
 
@@ -91,7 +72,7 @@ test.describe('Add to Cart & Checkout Flow', () => {
     await expect(checkoutPage.errorMessage).toContainText(testData.errorMessages.postalCodeRequired);
   });
 
-  test('TC-005 : Remove Item from Inventory Page', async () => {
+  test('TC-005 : Remove Item from Inventory Page', async ({ inventoryPage }) => {
     const productName = testData.products.backpack;
 
     // Add item dulu
@@ -105,7 +86,7 @@ test.describe('Add to Cart & Checkout Flow', () => {
     await expect(inventoryPage.cartBadge).not.toBeVisible();
   });
 
-  test('TC-006 : Remove Item from Cart Page', async () => {
+  test('TC-006 : Remove Item from Cart Page', async ({ inventoryPage, cartPage }) => {
     const productName = testData.products.backpack;
 
     // Add item dan masuk ke cart
@@ -120,7 +101,7 @@ test.describe('Add to Cart & Checkout Flow', () => {
     await expect(cartPage.getItem(productName)).not.toBeVisible();
   });
 
-  test('TC-007 : Add Multiple Items to Cart', async () => {
+  test('TC-007 : Add Multiple Items to Cart', async ({ inventoryPage, cartPage }) => {
     const backpack = testData.products.backpack;
     const bikeLight = testData.products.bikeLight;
 

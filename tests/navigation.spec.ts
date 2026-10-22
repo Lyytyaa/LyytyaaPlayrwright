@@ -1,31 +1,11 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { CartPage } from '../pages/CartPage';
-import { SidebarMenu } from '../pages/SidebarMenu';
+import { expect } from '@playwright/test';
+import { authenticatedTest as test } from '../fixtures/baseTest';
 import { testData } from '../data/testData';
 
 test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
-  let loginPage: LoginPage;
-  let inventoryPage: InventoryPage;
-  let cartPage: CartPage;
-  let sidebarMenu: SidebarMenu;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
-    cartPage = new CartPage(page);
-    sidebarMenu = new SidebarMenu(page);
-
-    // Login terlebih dahulu sebelum mengakses fitur sidebar
-    await loginPage.goto();
-    const { username, password } = testData.users.standard;
-    await loginPage.login(username, password);
-  });
-
   // --- 1. Skenario Menu Utama Sidebar ---
 
-  test('TC-001 : Logout via Sidebar Menu', async ({ page }) => {
+  test('TC-001 : Logout via Sidebar Menu', async ({ page, loginPage, sidebarMenu }) => {
     await sidebarMenu.open();
     await sidebarMenu.clickLogout();
 
@@ -34,7 +14,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     await expect(loginPage.loginButton).toBeVisible();
   });
 
-  test('TC-002 : Navigate to All Items from Cart Page', async ({ page }) => {
+  test('TC-002 : Navigate to All Items from Cart Page', async ({ page, inventoryPage, sidebarMenu }) => {
     await inventoryPage.goToCart();
     await expect(page).toHaveURL(/cart.html/);
 
@@ -46,7 +26,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     await expect(inventoryPage.title).toHaveText('Products');
   });
 
-  test('TC-003 : Reset App State via Sidebar Menu', async () => {
+  test('TC-003 : Reset App State via Sidebar Menu', async ({ inventoryPage, sidebarMenu }) => {
     const productName = testData.products.backpack;
 
     // Tambah barang ke keranjang (badge cart menunjukkan angka 1)
@@ -62,7 +42,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     await expect(inventoryPage.cartBadge).not.toBeVisible();
   });
 
-  test('TC-004 : Verify About Link in Sidebar Menu', async () => {
+  test('TC-004 : Verify About Link in Sidebar Menu', async ({ sidebarMenu }) => {
     await sidebarMenu.open();
 
     // Bukti: link About mengarah ke situs resmi Sauce Labs
@@ -70,7 +50,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     await expect(sidebarMenu.aboutLink).toHaveAttribute('href', 'https://saucelabs.com/');
   });
 
-  test('TC-005 : Open and Close Sidebar Menu', async () => {
+  test('TC-005 : Open and Close Sidebar Menu', async ({ sidebarMenu }) => {
     await sidebarMenu.open();
     await expect(sidebarMenu.allItemsLink).toBeVisible();
 
@@ -82,7 +62,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
 
   // --- 2. Skenario Submenu Dynamic Catalog ---
 
-  test('TC-006 : Dynamic Catalog - Lazy Load (Infinite Scroll)', async ({ page }) => {
+  test('TC-006 : Dynamic Catalog - Lazy Load (Infinite Scroll)', async ({ page, sidebarMenu }) => {
     await sidebarMenu.open();
     await sidebarMenu.openDynamicCatalogSubmenu();
     await sidebarMenu.clickLazyLoad();
@@ -103,7 +83,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     }, { timeout: 7000 }).toBeGreaterThan(initialCount);
   });
 
-  test('TC-007 : Dynamic Catalog - Spinner Loading State', async ({ page }) => {
+  test('TC-007 : Dynamic Catalog - Spinner Loading State', async ({ page, sidebarMenu }) => {
     await sidebarMenu.open();
     await sidebarMenu.openDynamicCatalogSubmenu();
     await sidebarMenu.clickSpinner();
@@ -120,7 +100,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('TC-008 : Dynamic Catalog - Slider Dot Navigation', async ({ page }) => {
+  test('TC-008 : Dynamic Catalog - Slider Dot Navigation', async ({ page, sidebarMenu }) => {
     await sidebarMenu.open();
     await sidebarMenu.openDynamicCatalogSubmenu();
     await sidebarMenu.clickSlider();
@@ -140,7 +120,7 @@ test.describe('Sidebar Navigation & Dynamic Catalog Tests', () => {
     }, { timeout: 5000 }).not.toBe(firstProduct);
   });
 
-  test('TC-009 : Dynamic Catalog - Slider Auto Slide', async ({ page }) => {
+  test('TC-009 : Dynamic Catalog - Slider Auto Slide', async ({ sidebarMenu }) => {
     await sidebarMenu.open();
     await sidebarMenu.openDynamicCatalogSubmenu();
     await sidebarMenu.clickSlider();

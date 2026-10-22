@@ -1,25 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { ProductDetailPage } from '../pages/ProductDetailPage';
+import { expect } from '@playwright/test';
+import { authenticatedTest as test } from '../fixtures/baseTest';
 import { testData } from '../data/testData';
 
 test.describe('Product Detail Page Tests', () => {
-  let loginPage: LoginPage;
-  let inventoryPage: InventoryPage;
-  let productDetailPage: ProductDetailPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
-    productDetailPage = new ProductDetailPage(page);
-
-    await loginPage.goto();
-    const { username, password } = testData.users.standard;
-    await loginPage.login(username, password);
-  });
-
-  test('TC-001 : Klik Nama Produk Masuk ke Halaman Detail', async ({ page }) => {
+  test('TC-001 : Klik Nama Produk Masuk ke Halaman Detail', async ({ page, inventoryPage, productDetailPage }) => {
     const productName = testData.products.backpack;
 
     // Klik nama produk dari halaman inventory
@@ -34,7 +18,7 @@ test.describe('Product Detail Page Tests', () => {
     await expect(productDetailPage.productPrice).toBeVisible();
   });
 
-  test('TC-002 : Add to Cart dari Halaman Detail Produk', async () => {
+  test('TC-002 : Add to Cart dari Halaman Detail Produk', async ({ inventoryPage, productDetailPage }) => {
     const productName = testData.products.backpack;
 
     // Masuk ke halaman detail
@@ -50,7 +34,7 @@ test.describe('Product Detail Page Tests', () => {
     await expect(productDetailPage.removeButton).toBeVisible();
   });
 
-  test('TC-003 : Tombol Back to Products Berfungsi', async ({ page }) => {
+  test('TC-003 : Tombol Back to Products Berfungsi', async ({ page, inventoryPage, productDetailPage }) => {
     const productName = testData.products.backpack;
 
     // Masuk ke halaman detail
@@ -65,7 +49,7 @@ test.describe('Product Detail Page Tests', () => {
     await expect(inventoryPage.title).toHaveText('Products');
   });
 
-  test('TC-004 : Halaman Detail Tampilkan Deskripsi Produk', async () => {
+  test('TC-004 : Halaman Detail Tampilkan Deskripsi Produk', async ({ inventoryPage, productDetailPage }) => {
     const productName = testData.products.backpack;
 
     // Masuk ke halaman detail

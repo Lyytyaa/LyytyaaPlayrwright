@@ -1,25 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { CartPage } from '../pages/CartPage';
+import { expect } from '@playwright/test';
+import { authenticatedTest as test } from '../fixtures/baseTest';
 import { testData } from '../data/testData';
 
 test.describe('Cart Management Tests', () => {
-  let loginPage: LoginPage;
-  let inventoryPage: InventoryPage;
-  let cartPage: CartPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
-    cartPage = new CartPage(page);
-
-    await loginPage.goto();
-    const { username, password } = testData.users.standard;
-    await loginPage.login(username, password);
-  });
-
-  test('TC-001 : Cart Kosong - Tidak Ada Item di Cart', async ({ page }) => {
+  test('TC-001 : Cart Kosong - Tidak Ada Item di Cart', async ({ page, inventoryPage, cartPage }) => {
     // Langsung masuk ke cart tanpa add item
     await inventoryPage.goToCart();
 
@@ -33,7 +17,7 @@ test.describe('Cart Management Tests', () => {
     await expect(inventoryPage.cartBadge).not.toBeVisible();
   });
 
-  test('TC-002 : Continue Shopping dari Cart Kembali ke Inventory', async ({ page }) => {
+  test('TC-002 : Continue Shopping dari Cart Kembali ke Inventory', async ({ page, inventoryPage, cartPage }) => {
     // Masuk ke cart
     await inventoryPage.goToCart();
     await expect(page).toHaveURL(/cart.html/);
@@ -46,7 +30,7 @@ test.describe('Cart Management Tests', () => {
     await expect(inventoryPage.title).toHaveText('Products');
   });
 
-  test('TC-003 : Add 2 Item Lalu Remove 1 - Badge Update', async () => {
+  test('TC-003 : Add 2 Item Lalu Remove 1 - Badge Update', async ({ inventoryPage }) => {
     const backpack = testData.products.backpack;
     const bikeLight = testData.products.bikeLight;
 
@@ -62,7 +46,7 @@ test.describe('Cart Management Tests', () => {
     await expect(inventoryPage.cartBadge).toHaveText('1');
   });
 
-  test('TC-004 : Add 3 Item - Badge Menunjukkan Angka 3', async () => {
+  test('TC-004 : Add 3 Item - Badge Menunjukkan Angka 3', async ({ inventoryPage }) => {
     const backpack = testData.products.backpack;
     const bikeLight = testData.products.bikeLight;
     const boltTShirt = testData.products.boltTShirt;
@@ -76,7 +60,7 @@ test.describe('Cart Management Tests', () => {
     await expect(inventoryPage.cartBadge).toHaveText('3');
   });
 
-  test('TC-005 : Verify Cart Persists After Navigation', async ({ page }) => {
+  test('TC-005 : Verify Cart Persists After Navigation', async ({ inventoryPage, cartPage }) => {
     const productName = testData.products.backpack;
 
     // Add item ke cart

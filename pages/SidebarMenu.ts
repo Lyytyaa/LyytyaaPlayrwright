@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { sidebarLocators } from '../locators/sidebarLocators';
 
 export class SidebarMenu {
   readonly page: Page;
@@ -37,34 +38,34 @@ export class SidebarMenu {
     this.page = page;
 
     // Header & Drawer
-    this.openButton = page.locator('#react-burger-menu-btn');
-    this.closeButton = page.locator('#react-burger-cross-btn');
+    this.openButton = page.locator(sidebarLocators.openButton);
+    this.closeButton = page.locator(sidebarLocators.closeButton);
 
     // Main Menu
-    this.allItemsLink = page.locator('[data-test="inventory-sidebar-link"]');
-    this.aboutLink = page.locator('[data-test="about-sidebar-link"]');
-    this.logoutLink = page.locator('[data-test="logout-sidebar-link"]');
-    this.resetAppStateLink = page.locator('[data-test="reset-sidebar-link"]');
+    this.allItemsLink = page.locator(sidebarLocators.allItemsLink);
+    this.aboutLink = page.locator(sidebarLocators.aboutLink);
+    this.logoutLink = page.locator(sidebarLocators.logoutLink);
+    this.resetAppStateLink = page.locator(sidebarLocators.resetAppStateLink);
 
     // Dynamic Catalog Submenu
-    this.dynamicCatalogLink = page.locator('[data-test="dynamic-catalog-sidebar-link"]');
-    this.dynamicCatalogSubmenu = page.locator('[data-test="dynamic-catalog-submenu"]');
-    this.lazyLoadLink = page.locator('[data-test="dynamic-catalog-lazy-load-link"]');
-    this.spinnerLink = page.locator('[data-test="dynamic-catalog-spinner-link"]');
-    this.sliderLink = page.locator('[data-test="dynamic-catalog-slider-link"]');
+    this.dynamicCatalogLink = page.locator(sidebarLocators.dynamicCatalogLink);
+    this.dynamicCatalogSubmenu = page.locator(sidebarLocators.dynamicCatalogSubmenu);
+    this.lazyLoadLink = page.locator(sidebarLocators.lazyLoadLink);
+    this.spinnerLink = page.locator(sidebarLocators.spinnerLink);
+    this.sliderLink = page.locator(sidebarLocators.sliderLink);
 
     // Dynamic Catalog Page Elements
-    this.title = page.locator('[data-test="title"]');
-    this.lazyLoadContainer = page.locator('[data-test="dynamic-catalog-lazy-load-container"]');
-    this.lazyLoadItems = page.locator('[data-test^="lazy-load-item-"]');
-    this.spinnerContainer = page.locator('[data-test="dynamic-catalog-spinner-container"]');
-    this.spinner = page.locator('[data-test="dynamic-catalog-spinner"]');
-    this.spinnerItems = page.locator('[data-test^="spinner-item-"]');
-    this.sliderContainer = page.locator('[data-test="dynamic-catalog-slider-container"]');
-    this.sliderItem = page.locator('[data-test="dynamic-catalog-slider-item"]');
-    this.sliderItemName = page.locator('[data-test="dynamic-catalog-slider-item-name"]');
-    this.sliderItemPrice = page.locator('[data-test="dynamic-catalog-slider-item-price"]');
-    this.sliderDots = page.locator('[data-test^="dynamic-catalog-slider-dot-"]');
+    this.title = page.locator(sidebarLocators.title);
+    this.lazyLoadContainer = page.locator(sidebarLocators.lazyLoadContainer);
+    this.lazyLoadItems = page.locator(sidebarLocators.lazyLoadItems);
+    this.spinnerContainer = page.locator(sidebarLocators.spinnerContainer);
+    this.spinner = page.locator(sidebarLocators.spinner);
+    this.spinnerItems = page.locator(sidebarLocators.spinnerItems);
+    this.sliderContainer = page.locator(sidebarLocators.sliderContainer);
+    this.sliderItem = page.locator(sidebarLocators.sliderItem);
+    this.sliderItemName = page.locator(sidebarLocators.sliderItemName);
+    this.sliderItemPrice = page.locator(sidebarLocators.sliderItemPrice);
+    this.sliderDots = page.locator(sidebarLocators.sliderDots);
   }
 
   // --- Drawer Actions ---
@@ -126,7 +127,7 @@ export class SidebarMenu {
   }
 
   async clickDot(index: number) {
-    await this.page.locator(`[data-test="dynamic-catalog-slider-dot-${index}"]`).click();
+    await this.page.locator(sidebarLocators.sliderDotByIndex(index)).click();
   }
 
   async getCurrentSlideProductName(): Promise<string> {

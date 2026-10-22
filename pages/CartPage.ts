@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { cartLocators } from '../locators/cartLocators';
 
 export class CartPage {
   readonly page: Page;
@@ -8,14 +9,14 @@ export class CartPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.checkoutButton = page.locator('[data-test="checkout"]');
-    this.continueShoppingButton = page.locator('[data-test="continue-shopping"]');
-    this.cartItems = page.locator('[data-test="inventory-item"]');
+    this.checkoutButton = page.locator(cartLocators.checkoutButton);
+    this.continueShoppingButton = page.locator(cartLocators.continueShoppingButton);
+    this.cartItems = page.locator(cartLocators.inventoryItem);
   }
 
   getItem(productName: string): Locator {
     return this.page
-      .locator('[data-test="inventory-item"]')
+      .locator(cartLocators.inventoryItem)
       .filter({ hasText: productName });
   }
 
@@ -29,6 +30,6 @@ export class CartPage {
 
   async removeItem(productName: string) {
     const item = this.getItem(productName);
-    await item.getByRole('button', { name: /remove/i }).click();
+    await item.getByRole('button', { name: cartLocators.removeButton }).click();
   }
 }
